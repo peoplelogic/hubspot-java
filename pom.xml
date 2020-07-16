@@ -3,41 +3,21 @@
     <groupId>com.integrationagent</groupId>
     <artifactId>hubspot-java</artifactId>
     <packaging>jar</packaging>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3-sovrn</version>
     <name>hubspot-java</name>
     <url>http://maven.apache.org</url>
-    <scm>
-        <connection>scm:git:https://github.com/integrationagent/hubspot-java.git</connection>
-        <developerConnection>scm:git:git@github.com:integrationagent/hubspot-java.git</developerConnection>
-        <url>https://github.com/integrationagent/hubspot-java</url>
-        <tag>hubspot-java-0.1</tag>
-    </scm>
     <repositories>
         <repository>
+            <id>viglink-repo</id>
+            <url>http://nexus/content/groups/public</url>
             <snapshots>
-                <enabled>false</enabled>
+                <updatePolicy>always</updatePolicy>
             </snapshots>
-            <id>central</id>
-            <name>bintray</name>
-            <url>http://jcenter.bintray.com</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
         </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>central</id>
-            <name>bintray-plugins</name>
-            <url>http://jcenter.bintray.com</url>
-        </pluginRepository>
-    </pluginRepositories>
-    <distributionManagement>
-        <repository>
-            <id>bintray</id>
-            <url>https://api.bintray.com/maven/integrationagent/hubspot-java/hubspot-java</url>
-        </repository>
-    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>com.google.guava</groupId>
@@ -99,29 +79,6 @@
                         <checkModificationExclude>pom.xml</checkModificationExclude>
                     </checkModificationExcludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jfrog.buildinfo</groupId>
-                <artifactId>artifactory-maven-plugin</artifactId>
-                <version>2.4.0</version>
-                <inherited>false</inherited>
-                <executions>
-                    <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>publish</goal>
-                        </goals>
-                        <configuration>
-                            <publisher>
-                                <contextUrl>http://45.55.198.73:8081/artifactory</contextUrl>
-                                <username>${username}</username>
-                                <password>${password}</password>
-                                <repoKey>integration-agent-releases</repoKey>
-                                <snapshotRepoKey>integration-agent-snapshots</snapshotRepoKey>
-                            </publisher>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
