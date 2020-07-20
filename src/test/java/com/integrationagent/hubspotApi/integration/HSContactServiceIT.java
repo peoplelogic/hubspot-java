@@ -13,6 +13,7 @@ import org.junit.rules.ExpectedException;
 
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.doThrow;
@@ -209,6 +210,19 @@ public class HSContactServiceIT {
         exception.expect(HubSpotException.class);
         exception.expectMessage(StringContains.containsString("User ID must be provided"));
         hubSpot.contact().delete(contact);
+    }
+
+    @Test
+    public void getByEmailBatch_Test() throws Exception {
+        long contactId1 = hubSpot.contact().create(new HSContact(testEmail1, testFirstname, testLastname)).getId();
+        long contactId2 = hubSpot.contact().create(new HSContact(testEmail2, testFirstname, testLastname)).getId();
+        long contactId3 = hubSpot.contact().create(new HSContact(testEmail3, testFirstname, testLastname)).getId();
+        Thread.sleep(5000);
+
+        List<HSContact> contacts = hubSpot.contact().getByEmailBatch(Arrays.asList(testEmail1, testEmail2, testEmail3));
+        assertTrue(contacts.stream().anyMatch(e -> e.getId() == contactId1));
+        assertTrue(contacts.stream().anyMatch(e -> e.getId() == contactId2));
+        assertTrue(contacts.stream().anyMatch(e -> e.getId() == contactId3));
     }
 
     @Test

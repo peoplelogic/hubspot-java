@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class HSContactService {
 
@@ -94,6 +95,32 @@ public class HSContactService {
         httpService.deleteRequest(url);
     }
 
+    public List<HSContact> getByEmailBatch(List<String> emails) throws HubSpotException {
+        StringBuilder urlBuilder = new StringBuilder("/contacts/v1/contact/emails/batch/?");
+
+        urlBuilder.append("email=");
+        urlBuilder.append(emails.get(0));
+        for (int i=1; i < emails.size(); ++i) {
+            String email = emails.get(i);
+            urlBuilder.append("&email=");
+            urlBuilder.append(email);
+        }
+
+        return getContacts(urlBuilder.toString());
+    }
+
+    private List<HSContact> getContacts(String url) throws HubSpotException {
+        try {
+            return parseContactsData((JSONObject) httpService.getRequest(url));
+        } catch (HubSpotException e) {
+            if (e.getMessage().equals("Not Found")) {
+                return null;
+            } else {
+                throw e;
+            }
+        }
+    }
+
     public HSContact parseContactData(JSONObject jsonObject) {
         HSContact HSContact = new HSContact();
         HSContact.setId(jsonObject.getLong("vid"));
@@ -107,5 +134,11 @@ public class HSContactService {
                 )
         );
         return HSContact;
+    }
+
+    private List<HSContact> parseContactsData(JSONObject jsonObject) {
+        return jsonObject.keySet().stream()
+                .map(key -> parseContactData(jsonObject.getJSONObject(key)))
+                .collect(Collectors.toList());
     }
 }
