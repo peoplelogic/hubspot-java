@@ -86,7 +86,13 @@ public class HttpService {
         if(204 != resp.getStatus() && 200 != resp.getStatus() && 202 != resp.getStatus()){
             String message = null;
             try {
-                message = (resp.getStatus() == 404) ? resp.getStatusText() : resp.getBody().getObject().getString("message");
+                message = (resp.getStatus() == 404)
+                        ? resp.getStatusText()
+                        : resp.getBody().getObject().getString("message");
+            } catch (Exception e) {
+            }
+            try {
+                message += "\nReason: " + resp.getBody().getObject().getJSONArray("failureMessages");
             } catch (Exception e) {
             }
 
